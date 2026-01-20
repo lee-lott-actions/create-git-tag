@@ -1,24 +1,4 @@
-function Add-GitTag {
-	param(
-		[string]$RepoName,
-		[string]$OrgName,
-		[string]$BranchName,
-		[string]$TagName,
-		[string]$TagMessage,
-		[string]$CommitSha,
-		[string]$Token 
-	)
-
-	# Validate required inputs
-	if ([string]::IsNullOrEmpty($RepoName) -or 
-		[string]::IsNullOrEmpty($OrgName) -or 
-		[string]::IsNullOrEmpty($BranchName) -or 
-		[string]::IsNullOrEmpty($TagName) -or
-		[string]::IsNullOrEmpty($Token)) 
-	{
-		Write-Output "Error: Missing required parameters"  
-		Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Missing required parameters: RepoName, OrgName, BranchName, TagName, and Token must be provided."
-		Add-Content -Path $env:GITHUB_OUTPUT -Value "resfunction New-GitTagObject {
+function New-GitTagObject {
     param(
         [string]$RepoName,
         [string]$OrgName,
