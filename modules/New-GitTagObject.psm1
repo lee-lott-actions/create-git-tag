@@ -25,11 +25,12 @@ function New-GitTagObject {
     $tagResp = Invoke-WebRequest -Uri $tagUrl -Headers $Headers -Method Post -Body $tagBody
 
     if ($tagResp.StatusCode -ne 201) {
-        $msg = ($tagResp.Content | ConvertFrom-Json).message        
-        Write-Host "Failed to create tag object. Status: $($tagResp.StatusCode)"
+        $msg = ($tagResp.Content | ConvertFrom-Json).message
+        $errorMsg = "Error: Failed to create tag object. Status: $($tagResp.StatusCode). Message: $msg" 
+        Write-Host $errorMsg
         return @{
             Result = 'failure'
-            ErrorMessage = "Failed to create tag object: $msg"
+            ErrorMessage = $errorMsg
             TagObj = $null
         }
     }
