@@ -55,7 +55,7 @@ function Add-GitTag {
 
 		$result = New-GitTagObject -RepoName $RepoName -OrgName $OrgName -TagName $TagName -TagMessage $TagMessage -TargetSha $targetSha -GithubApiUrl $githubApiUrl -Headers $headers 
 		if ($result.Result -ne 'success') {
-			$errorMsg = "Error: $($result.ErrorMessage)"
+			$errorMsg = "$($result.ErrorMessage)"
 			Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
 			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
 			Write-Host $errorMsg
@@ -65,7 +65,7 @@ function Add-GitTag {
 		$tagObj = $result.TagObj 
 		$refResult = New-GitTagRef -RepoName $RepoName -OrgName $OrgName -TagName $TagName -TagSha $tagObj.sha -GithubApiUrl $githubApiUrl -Headers $headers 
 		if ($refResult.Result -ne 'success') {
-			$errorMsg = "Error: $($refResult.ErrorMessage)"
+			$errorMsg = "$($refResult.ErrorMessage)"
 			Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
 			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
 			Write-Host $errorMsg
