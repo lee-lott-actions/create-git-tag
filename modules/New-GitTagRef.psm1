@@ -18,7 +18,7 @@ function New-GitTagRef {
 
     if ($refResp.StatusCode -ne 201) {
         $msg = ($refResp.Content | ConvertFrom-Json).message
-        $errorMsg = "Error: failed to create tag ref. Status: $($refResp.StatusCode). Message: $msg"
+        $errorMsg = "Error: Failed to create tag ref. Status: $($refResp.StatusCode). Message: $msg"
         Write-Host $errorMsg
         return @{
             Result = 'failure'
