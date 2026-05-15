@@ -60,7 +60,7 @@ Describe "New-GitTagRef" {
 	
 			$result = New-GitTagRef -RepoName $RepoName -OrgName $OrgName -TagName $TagName -TagSha $TagSha -GithubApiUrl $MockApiUrl -Headers $Headers
 			$result.Result       | Should -Be 'failure'
-			$result.ErrorMessage | Should -Match "Error: Failed to create ref. Status: 400. Message: Validation Failed"
+			$result.ErrorMessage | Should -Match "Error: Failed to create tag ref. Status: 400. Message: Validation Failed"
 			$result.RefObject    | Should -Be $null
 		}
 	}
