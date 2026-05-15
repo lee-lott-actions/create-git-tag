@@ -3,14 +3,14 @@ Import-Module "$PSScriptRoot/../modules/Add-GitTag.psm1" -Force
 Describe "Add-GitTag" {
     BeforeAll {
         $script:RepoName   = "my-repo"
-        $script:$OrgName    = "my-org"
-        $script:$BranchName = "main"
-        $script:$TagName    = "v1.2.3"
-        $script:$TagMessage = "Release v1.2.3"
-        $script:$CommitSha  = "abc123def456"
-        $script:$Token      = "test-token"
-        $script:$GithubApiUrl = "http://127.0.0.1:3000"
-        $script:$Headers = @{ Authorization = "Bearer $Token"; Accept = "application/vnd.github+json" }
+        $script:OrgName    = "my-org"
+        $script:BranchName = "main"
+        $script:TagName    = "v1.2.3"
+        $script:TagMessage = "Release v1.2.3"
+        $script:CommitSha  = "abc123def456"
+        $script:Token      = "test-token"
+        $script:MockApiUrl = "http://127.0.0.1:3000"
+        $script:Headers = @{ Authorization = "Bearer $Token"; Accept = "application/vnd.github+json" }
     }
     
     BeforeEach {
