@@ -16,9 +16,9 @@ function Add-GitTag {
 		[string]::IsNullOrEmpty($TagName) -or
 		[string]::IsNullOrEmpty($Token)) 
 	{
-		Write-Output "Error: Missing required parameters"  
 		Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Missing required parameters: RepoName, OrgName, BranchName, TagName, and Token must be provided."
 		Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
+		Write-Host "Error: Missing required parameters"  
 		return
 	}
 
@@ -32,8 +32,8 @@ function Add-GitTag {
 	$headers = @{
 		Authorization = "Bearer $Token"
 		"Accept" = "application/vnd.github+json"
-		"Content-Type" = "application/json"
 		"X-GitHub-Api-Version" = "2026-03-10"
+		"Content-Type" = "application/json"		
 	}
 
 	try {
@@ -45,32 +45,39 @@ function Add-GitTag {
 		} else {
 			$targetSha = Get-BranchHeadSha -RepoName $RepoName -OrgName $OrgName -BranchName $BranchName -GithubApiUrl $githubApiUrl -Headers $headers
 			if ([string]::IsNullOrEmpty($targetSha)) {
+				$errorMsg = "Error: Failed to fetch branch info."
 				Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-      			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Failed to fetch branch info."
+      			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+				Write-Host $errorMsg
 				return   
 			}
 		}
 
 		$result = New-GitTagObject -RepoName $RepoName -OrgName $OrgName -TagName $TagName -TagMessage $TagMessage -TargetSha $targetSha -GithubApiUrl $githubApiUrl -Headers $headers 
 		if ($result.Result -ne 'success') {
+			$errorMsg = "$($result.ErrorMessage)"
 			Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$($result.ErrorMessage)"
+			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+			Write-Host $errorMsg
 			return
 		}
 
 		$tagObj = $result.TagObj 
 		$refResult = New-GitTagRef -RepoName $RepoName -OrgName $OrgName -TagName $TagName -TagSha $tagObj.sha -GithubApiUrl $githubApiUrl -Headers $headers 
 		if ($refResult.Result -ne 'success') {
+			$errorMsg = "$($refResult.ErrorMessage)"
 			Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$($refResult.ErrorMessage)"
+			Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+			Write-Host $errorMsg
 			return
 		}
 
 		Add-Content -Path $env:GITHUB_OUTPUT -Value "result=success"  
 		Write-Host "Successfully created tag $TagName on $OrgName/$RepoName ($BranchName)"
 	} catch {
+		$errorMsg = "Error: Failed to create tag.  Exception: $($_Exception.Message)"
 		Add-Content -Path $env:GITHUB_OUTPUT -Value "result=failure"
-		Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=Create Git Tag threw an exception and failed."
-		Write-Host "Failed to create Git tag: $($_.Exception.Message)"
+		Add-Content -Path $env:GITHUB_OUTPUT -Value "error-message=$errorMsg"
+		Write-Host $errorMsg
 	}
 }
