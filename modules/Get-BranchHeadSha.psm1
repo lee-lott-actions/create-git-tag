@@ -11,7 +11,7 @@ function Get-BranchHeadSha {
 
     $EncodedBranchName = [uri]::EscapeDataString($BranchName)
     $branchUrl = "$GithubApiUrl/repos/$OrgName/$RepoName/branches/$EncodedBranchName"
-    $branchResp = Invoke-WebRequest -Uri $branchUrl -Headers $Headers -Method Get
+    $branchResp = Invoke-WebRequest -Uri $branchUrl -Headers $Headers -Method Get -SkipHttpErrorCheck
     
     if ($branchResp.StatusCode -ne 200) {
         Write-Host "Failed to fetch branch info. Status: $($branchResp.StatusCode)"

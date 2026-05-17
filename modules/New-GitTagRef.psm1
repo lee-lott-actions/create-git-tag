@@ -14,7 +14,7 @@ function New-GitTagRef {
     } | ConvertTo-Json
 
     $refUrl = "$GithubApiUrl/repos/$OrgName/$RepoName/git/refs"
-    $refResp = Invoke-WebRequest -Uri $refUrl -Headers $Headers -Method Post -Body $refBody
+    $refResp = Invoke-WebRequest -Uri $refUrl -Headers $Headers -Method Post -Body $refBody -SkipHttpErrorCheck
 
     if ($refResp.StatusCode -ne 201) {
         $msg = ($refResp.Content | ConvertFrom-Json).message
