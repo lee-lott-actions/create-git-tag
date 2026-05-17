@@ -22,7 +22,7 @@ function New-GitTagObject {
     } | ConvertTo-Json
 
     $tagUrl = "$GithubApiUrl/repos/$OrgName/$RepoName/git/tags"
-    $tagResp = Invoke-WebRequest -Uri $tagUrl -Headers $Headers -Method Post -Body $tagBody
+    $tagResp = Invoke-WebRequest -Uri $tagUrl -Headers $Headers -Method Post -Body $tagBody -SkipHttpErrorCheck
 
     if ($tagResp.StatusCode -ne 201) {
         $msg = ($tagResp.Content | ConvertFrom-Json).message
